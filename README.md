@@ -224,7 +224,3 @@ To run this API, follow these steps:
 ## Author
 
 Amr Mubarak
-
-```
-
-```
