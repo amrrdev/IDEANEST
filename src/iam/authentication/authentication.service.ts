@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -30,7 +31,7 @@ export class AuthenticationService {
       });
 
       await user.save();
-      return { message: 'Welcome!' };
+      return { message: 'User registered successfully!' };
     } catch (error) {
       if (error.code === 11000) {
         throw new ConflictException('User with this email already exists');
@@ -48,19 +49,52 @@ export class AuthenticationService {
       );
     }
 
-    const accessToken = await this.jwtService.signAsync(
-      {
-        sub: user.id,
+    const tokens = await this.generateTokens(user);
+    return { message: 'Signin successful.', ...tokens };
+  }
+
+  async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { sub } = await this.jwtService.verifyAsync<Pick<ActiveUserData, 'sub'>>(
+        refreshTokenDto.refreshToken,
+        {
+          secret: this.jwtConfigration.secret,
+          issuer: this.jwtConfigration.issuer,
+          audience: this.jwtConfigration.audience,
+        },
+      );
+
+      const user = await this.userModel.findById(sub);
+      const tokens = await this.generateTokens(user);
+      return { message: 'Token refreshed successfully', ...tokens };
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async generateTokens(user: User) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.signToken<Partial<ActiveUserData>>(user.id, this.jwtConfigration.accessTokenTtl, {
         email: user.email,
-      } satisfies ActiveUserData,
+      }),
+      this.signToken(user.id, this.jwtConfigration.refreshTokenTtl),
+    ]);
+
+    return { accessToken, refreshToken };
+  }
+
+  private async signToken<T>(userId: string, expiresIn: string, payload?: T) {
+    return await this.jwtService.signAsync(
+      {
+        sub: userId,
+        ...payload,
+      },
       {
         secret: this.jwtConfigration.secret,
         issuer: this.jwtConfigration.issuer,
         audience: this.jwtConfigration.audience,
-        expiresIn: this.jwtConfigration.accessTokenTtl,
+        expiresIn: expiresIn,
       },
     );
-
-    return { message: 'Welcome!', accessToken };
   }
 }
