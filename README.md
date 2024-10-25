@@ -12,6 +12,12 @@ This API provides functionalities for user authentication, organization manageme
 - **ODM:** Mongoose
 - **Deployment:** MongoDB Atlas for database hosting
 
+## Deployment
+
+The API is deployed on Railway and can be accessed at the following URL:
+
+- [IDEANEST API](https://ideanest-production.up.railway.app/)
+
 ## Authentication
 
 All endpoints, except for the signup and signin endpoints, require a Bearer token for authorization.
