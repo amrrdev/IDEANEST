@@ -1,85 +1,228 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API Documentation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This API provides functionalities for user authentication, organization management, and user invitations within organizations. The application allows users to sign up, sign in, refresh tokens, create and manage organizations, and invite users to organizations.
 
-## Description
+## Technologies Used
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Framework:** NestJS
+- **Language:** TypeScript
+- **Database:** MongoDB
+- **ODM:** Mongoose
+- **Deployment:** MongoDB Atlas for database hosting
 
-## Project setup
+## Authentication
 
-```bash
-$ npm install
-```
+All endpoints, except for the signup and signin endpoints, require a Bearer token for authorization.
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Endpoints
 
-# watch mode
-$ npm run start:dev
+### 1. Signup
 
-# production mode
-$ npm run start:prod
-```
+- **Request:** `POST /signup`
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "email": "string",
+    "password": "string"
+  }
+  ```
 
-## Run tests
+````
 
-```bash
-# unit tests
-$ npm run test
+- **Response:**
+  ```json
+  {
+    "message": "string"
+  }
+  ```
 
-# e2e tests
-$ npm run test:e2e
+### 2. Signin
 
-# test coverage
-$ npm run test:cov
-```
+- **Request:** `POST /signin`
+- **Request Body:**
+  ```json
+  {
+    "email": "string",
+    "password": "string"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "string",
+    "access_token": "string",
+    "refresh_token": "string"
+  }
+  ```
 
-## Resources
+### 3. Refresh Token
 
-Check out a few resources that may come in handy when working with NestJS:
+- **Request:** `POST /refresh-token`
+- **Request Body:**
+  ```json
+  {
+    "refresh_token": "string"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "string",
+    "access_token": "string",
+    "refresh_token": "string"
+  }
+  ```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Create Organization
 
-## Support
+- **Request:** `POST /organization`
+- **Authorization:** Bearer [Token]
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "description": "string"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "organization_id": "string"
+  }
+  ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 5. Read Organization
 
-## Stay in touch
+- **Request:** `GET /organization/{organization_id}`
+- **Authorization:** Bearer [Token]
+- **Response:**
+  ```json
+  {
+    "organization_id": "string",
+    "name": "string",
+    "description": "string",
+    "organization_members": [
+      {
+        "name": "string",
+        "email": "string",
+        "access_level": "string"
+      },
+      ...
+    ]
+  }
+  ```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 6. Read All Organizations
 
-## License
+- **Request:** `GET /organization`
+- **Authorization:** Bearer [Token]
+- **Response:**
+  ```json
+  [
+    {
+      "organization_id": "string",
+      "name": "string",
+      "description": "string",
+      "organization_members": [
+        {
+          "name": "string",
+          "email": "string",
+          "access_level": "string"
+        },
+        ...
+      ]
+    },
+    ...
+  ]
+  ```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 7. Update Organization
+
+- **Request:** `PUT /organization/{organization_id}`
+- **Authorization:** Bearer [Token]
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "description": "string"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "organization_id": "string",
+    "name": "string",
+    "description": "string"
+  }
+  ```
+
+### 8. Delete Organization
+
+- **Request:** `DELETE /organization/{organization_id}`
+- **Authorization:** Bearer [Token]
+- **Response:**
+  ```json
+  {
+    "message": "string"
+  }
+  ```
+
+### 9. Invite User to Organization
+
+- **Request:** `POST /organization/{organization_id}/invite`
+- **Authorization:** Bearer [Token]
+- **Request Body:**
+  ```json
+  {
+    "user_email": "string"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "string"
+  }
+  ```
+
+---
+
+## Installation
+
+To run this API, follow these steps:
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd <project-directory>
+   ```
+
+3. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Configure environment variables as needed.
+
+5. Start the application:
+   ```bash
+   npm run start
+   ```
+
+---
+
+## Author
+
+Amr Mubarak
+````
