@@ -24,6 +24,7 @@ All endpoints, except for the signup and signin endpoints, require a Bearer toke
 
 - **Request:** `POST /signup`
 - **Request Body:**
+
   ```json
   {
     "name": "string",
@@ -31,8 +32,6 @@ All endpoints, except for the signup and signin endpoints, require a Bearer toke
     "password": "string"
   }
   ```
-
-````
 
 - **Response:**
   ```json
@@ -225,4 +224,7 @@ To run this API, follow these steps:
 ## Author
 
 Amr Mubarak
-````
+
+```
+
+```
