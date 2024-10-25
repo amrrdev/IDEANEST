@@ -1,7 +1,3 @@
-Here’s a modified version of your API documentation that includes instructions for running the API using Docker:
-
----
-
 # API Documentation
 
 ## Overview
