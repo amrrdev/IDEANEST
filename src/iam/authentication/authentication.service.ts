@@ -1,16 +1,22 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../users/schemas/user.schema';
 import { Model } from 'mongoose';
 import { HashingService } from '../hashing/hashing.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
+import { JwtService } from '@nestjs/jwt';
+import jwtConfig from '../config/jwt.config';
+import { ConfigType } from '@nestjs/config';
+import { ActiveUserData } from '../interfaces/active-user-data.interface';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly hashingService: HashingService,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY) private readonly jwtConfigration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async singUp(signUpDto: SignUpDto) {
@@ -42,7 +48,19 @@ export class AuthenticationService {
       );
     }
 
-    // TODO: Generate Access Token, Refresh Token
-    return true;
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email,
+      } satisfies ActiveUserData,
+      {
+        secret: this.jwtConfigration.secret,
+        issuer: this.jwtConfigration.issuer,
+        audience: this.jwtConfigration.audience,
+        expiresIn: this.jwtConfigration.accessTokenTtl,
+      },
+    );
+
+    return { message: 'Welcome!', accessToken };
   }
 }
