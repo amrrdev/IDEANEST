@@ -1,3 +1,7 @@
+Here’s a modified version of your API documentation that includes instructions for running the API using Docker:
+
+---
+
 # API Documentation
 
 ## Overview
@@ -21,6 +25,38 @@ The API is deployed on Railway and can be accessed at the following URL:
 ## Authentication
 
 All endpoints, except for the signup and signin endpoints, require a Bearer token for authorization.
+
+## Installation
+
+To run this API using Docker, follow these steps:
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. **Navigate to the project directory:**
+
+   ```bash
+   cd <project-directory>
+   ```
+
+3. **Build and run the Docker containers:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the API:**
+
+   The API will be running at `http://localhost:3000`.
+
+5. **Use the following commands to stop the containers:**
+
+   ```bash
+   docker-compose down
+   ```
 
 ---
 
@@ -194,39 +230,8 @@ All endpoints, except for the signup and signin endpoints, require a Bearer toke
   }
   ```
 
----
-
-## Installation
-
-To run this API, follow these steps:
-
-1. Clone the repository:
-
-   ```bash
-   git clone <repository-url>
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd <project-directory>
-   ```
-
-3. Install the dependencies:
-
-   ```bash
-   npm install
-   ```
-
-4. Configure environment variables as needed.
-
-5. Start the application:
-   ```bash
-   npm run start
-   ```
-
----
-
 ## Author
 
 Amr Mubarak
+
+---
